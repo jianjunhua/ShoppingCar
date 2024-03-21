@@ -65,3 +65,5 @@ formate(new Date(), 'datetime', true);
 
 //2024年01月01日 12:04:12
 formate(new Date(), 'yyyy年MM月dd日 HH:mm:ss', true);
+
+var date = formate(new Date('2022-8-4 12:7:41'), 'date', true);

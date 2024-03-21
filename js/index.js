@@ -1,18 +1,58 @@
 class UIGoods {
     constructor(goods) {
-        this.data = goods;
-        this.choose = 0;
+        // this.data = goods;
+        // this.choose = 0;
+        Object.defineProperty(this, 'data', {
+            get() {
+                return goods;
+            },
+            set() {
+                throw new Error('不可修改');
+            },
+            configurable: false
+        });
+
+        var internalChooseValue = 0;
+        Object.defineProperty(this, 'choose', {
+            get() {
+                return internalChooseValue;
+            },
+            set(value) {
+                if (typeof value !== 'number') {
+                    throw new Error('choose属性必须为数字');
+                }
+                var temp = parseInt(value);
+                if (temp !== value) {
+                    throw new Error('choose属性必须为正整数');
+                }
+                if (value < 0) {
+                    throw new Error('choose属性必须大于等于0');
+                }
+                internalChooseValue = value;
+            },
+            configurable: false
+        });
     }
 
     //获取总价
-    getTotalPrice() {
-        return this.data.price * this.choose
+    get totalPrice() {
+        return this.choose * this.data.price;
     }
 
     //是否选中了此商品
-    isChoose() {
-        return this.choose > 0
+    get isChoose() {
+        return this.choose > 0;
     }
+
+    //获取总价
+    // getTotalPrice() {
+    //     return this.data.price * this.choose
+    // }
+
+    //是否选中了此商品
+    // isChoose() {
+    //     return this.choose > 0
+    // }
 
     //选中商品+1
     increase() {
@@ -46,7 +86,7 @@ class UIDatas {
         var sum = 0;
         for (let i = 0; i < this.uiGoods.length; i++) {
             var g = this.uiGoods[i];
-            sum += g.getTotalPrice();
+            sum += g.totalPrice;
         }
         return sum;
     }
@@ -81,7 +121,7 @@ class UIDatas {
     }
 
     isChoose(index) {
-        return this.uiGoods[index].isChoose();
+        return this.uiGoods[index].isChoose;
     }
 }
 
@@ -249,7 +289,7 @@ class UI {
         });
     }
 }
-var ui = new UI();
+var ui = new UIDatas();
 
 //事件
 ui.doms.goodsContainer.addEventListener("click", (e) => {
